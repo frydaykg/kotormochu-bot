@@ -1,10 +1,12 @@
 import urllib
 from google.appengine.api import urlfetch
-import settings
 import logging
 import json
 
 class Api():
+	def __init__(self, bot_token):
+		self.bot_token = bot_token
+	
 	def send(self, chatId, text, messageId = None, parse_mode = None):
 		form_fields = {
 		  'chat_id': chatId,
@@ -15,7 +17,7 @@ class Api():
 		if parse_mode:
 			form_fields['parse_mode'] = parse_mode
 
-		url = 'https://api.telegram.org/bot%s/sendMessage' % settings.BOT_TOKEN
+		url = 'https://api.telegram.org/bot%s/sendMessage' % self.bot_token
 		result = urlfetch.fetch(url=url,
 			payload= json.dumps(form_fields),
 			method=urlfetch.POST,
