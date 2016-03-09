@@ -14,17 +14,18 @@ class Main(webapp.RequestHandler):
 		if 'message' in update:
 			message = update['message']
 			if 'text' in message:
-				text = text = message['text'].encode('utf8')
+				text = message['text'].encode('utf-8') # from unicode to ascii
 				chat = message['chat']
 				translations = Translator().translate(text)
 				for translation in translations:
-					translationLen = len(translation)
+					encodedTranslation = translation.decode('utf-8')
+					translationLen = len(encodedTranslation)
 					if translationLen < 4096:
-						Api().send(chat['id'], translation, messageId = message['message_id'], parse_mode = 'HTML')
+						Api().send(chat['id'], encodedTranslation, messageId = message['message_id'], parse_mode = 'HTML')
 					else:
-						Api().send(chat['id'], translation[:4095], messageId = message['message_id'], parse_mode = 'HTML')
-						for i in xrange(4095, translationLen, 4095):
-							Api().send(chat['id'], translation[i:min(i + 4095, translationLen)], parse_mode = 'HTML')
+						Api().send(chat['id'], encodedTranslation[:4096], messageId = message['message_id'], parse_mode = 'HTML')
+						for i in xrange(4096, translationLen, 4096):
+							Api().send(chat['id'], encodedTranslation[i:min(i + 4096, translationLen)], parse_mode = 'HTML')
 
 application = webapp.WSGIApplication([('/.*', Main)], debug=True)
 

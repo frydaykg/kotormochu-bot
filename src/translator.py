@@ -1,6 +1,7 @@
 import urllib
 import re
 from google.appengine.api import urlfetch
+import logging
 
 class Translator():
 	def translate(self, text):
@@ -9,7 +10,7 @@ class Translator():
 		    method=urlfetch.GET,
 		    headers={'Content-Type': 'application/x-www-form-urlencoded'})
 		res = []
-		for i in re.finditer('<div class="gdarticle">([\w\W]+?)<\/div>', result.content):
+		for i in re.finditer('<div class="gdarticle">([\w\W]+?)<\/div>', result.content): #ascii ?
 			res.append(self.sanitize(i.group(1)))
 		if res:
 			return res
