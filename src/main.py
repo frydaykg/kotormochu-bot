@@ -22,6 +22,8 @@ class Main(webapp.RequestHandler):
 				chatId = message['chat']['id']
 				messageId = message['message_id']
 				
+				logging.info(self.request.body)
+				logging.info(text)
 				if text == '/help':
 					self.help(chatId)
 				else:
@@ -30,14 +32,13 @@ class Main(webapp.RequestHandler):
 	def translate(self, text, chatId, messageId):
 		translations = self.translator.translate(text)
 		for translation in translations:
-			encodedTranslation = translation.decode('utf-8')
-			translationLen = len(encodedTranslation)
+			translationLen = len(translation)
 			if translationLen < 4096:
-				self.api.send(chatId, encodedTranslation, messageId = messageId, parse_mode = 'HTML')
+				self.api.send(chatId, translation, messageId = messageId, parse_mode = 'HTML')
 			else:
-				self.api.send(chatId, encodedTranslation[:4096], messageId = messageId, parse_mode = 'HTML')
+				self.api.send(chatId, translation[:4096], messageId = messageId, parse_mode = 'HTML')
 				for i in xrange(4096, translationLen, 4096):
-					self.api.send(chatId, encodedTranslation[i:min(i + 4096, translationLen)], parse_mode = 'HTML')
+					self.api.send(chatId, translation[i:min(i + 4096, translationLen)], parse_mode = 'HTML')
 	
 	def help(self, chatId):
 		text = 'Для перевода слова просто напишите его в ЛС боту и Вам придут возможные его переводы или сообщение о незнание перевода.'
