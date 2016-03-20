@@ -26,6 +26,8 @@ class Main(webapp.RequestHandler):
 				logging.info(text)
 				if text == '/help':
 					self.help(chatId)
+				elif text == '/start':
+					self.start(chatId)
 				else:
 					self.translate(text, chatId, messageId)
 
@@ -42,6 +44,10 @@ class Main(webapp.RequestHandler):
 	
 	def help(self, chatId):
 		text = 'Для перевода слова просто напишите его в ЛС боту и Вам придут возможные его переводы или сообщение о незнание перевода.'
+		self.api.send(chatId, text)
+
+	def start(self, chatId):
+		text = 'Салам, брат!'
 		self.api.send(chatId, text)
 
 
