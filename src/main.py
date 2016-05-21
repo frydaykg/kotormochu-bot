@@ -6,12 +6,14 @@ import re
 from google.appengine.api import urlfetch
 from api import Api
 from translator import Translator
+from transliterator import Transliterator
 import logging
 import settings
 
 class Main(webapp.RequestHandler):
 	api = Api(settings.BOT_TOKEN)
 	translator = Translator()
+	transliterator = Transliterator()
 	
 	def post(self):
 		update = json.loads(self.request.body)
@@ -32,6 +34,7 @@ class Main(webapp.RequestHandler):
 					self.translate(text, chatId, messageId)
 
 	def translate(self, text, chatId, messageId):
+		text = self.transliterator.transliterate(text)
 		translations = self.translator.translate(text)
 		for translation in translations:
 			translationLen = len(translation)
