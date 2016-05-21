@@ -6,18 +6,18 @@ import json
 
 class Transliterator():
   def transliterate(self, text):
-    m = get_map()
+    m = self.get_map()
     for key in m:
       text = text.replace(key, m[key])
     return text
 
-  def get_map():
+  def get_map(self):
     d = {
-    '-о-': u'ө',
-    '-у-': u'ү',
-    '-н-': u'ң',
-    '-О-': u'Ө',
-    '-У-': u'Ү',
-    '-Н-': u'Ң',
+    '-о-': 'ө',
+    '-у-': 'ү',
+    '-н-': 'ң',
+    '-О-': 'Ө',
+    '-У-': 'Ү',
+    '-Н-': 'Ң',
     }
     return d
